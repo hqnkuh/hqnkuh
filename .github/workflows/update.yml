@@ -1,0 +1,35 @@
+name: update README
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # 毎日午前0時
+  push:
+    branches:
+      - main
+    paths:
+      - 'profile/**'
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+
+      - name: update
+        run: |
+          UNIX_TIME=$(date +%s)
+          sed "s/{date}/$UNIX_TIME/g" profile/README.md > README.md
+
+      - name: commit and push changes
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "actions@github.com"
+          git remote add origin ${{ github.repositoryUrl }}
+          git add README.md
+          git commit -m "update" || echo "no changes to commit"
+          git push
