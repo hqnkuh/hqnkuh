@@ -24,8 +24,6 @@ jobs:
           sed "s/{date}/$UNIX_TIME/g" profile/README.md > README.md
 
       - name: commit and push changes
-        env:
-          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "65916846+actions-user@users.noreply.github.com"
